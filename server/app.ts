@@ -1,14 +1,20 @@
 import dotenv from 'dotenv'
 dotenv.config()
 import express from 'express'
+import './src/config/db'
 import session from 'express-session'
 import passport from './src/passport'
-import authRoutes from './src/routes/auth'
+import authRoutes from './src/routes/googleAuth'
+import cors from 'cors'
 
 const app = express()
 const port = 3000
 
 app.use(express.json())
+app.use(cors({
+  origin: process.env.CLIENT_URL,
+  credentials: true
+}))
 
 app.use(session({
   secret: process.env.JWT_SECRET!,
