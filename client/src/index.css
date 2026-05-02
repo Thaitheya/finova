@@ -81,6 +81,8 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
+    --finova-bg: #13102F;
+    --sidebar-grey1: #1E1E1E;
 }
 
 .dark {
@@ -120,6 +122,12 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    @layer base {
+  input::placeholder {
+    color: white;
+    opacity: 1;
+  }
+}
     }
   body {
     @apply bg-background text-foreground;
