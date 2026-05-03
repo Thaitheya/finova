@@ -9,18 +9,39 @@ router.get('/google', passport.authenticate('google', {
 }))
 
 router.get('/google/callback',
-  passport.authenticate('google', { session: false, failureRedirect: '/login' }),
-  (req, res) => {
+  passport.authenticate('google', { session: false }),
+  async (req, res) => {
     const user = req.user as IUser
+
     const token = jwt.sign(
       { id: user.id, email: user.email },
       process.env.JWT_SECRET!,
+      { expiresIn: '15m' }
+    )
+
+    const refreshToken = jwt.sign(
+      { id: user.id },
+      process.env.JWT_REFRESH_SECRET!,
       { expiresIn: '7d' }
-    );
-    res.redirect(`${process.env.CLIENT_URL}/dashboard?token=${token}`)
+    )
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 15 * 60 * 1000
+    })
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    })
+
+    res.redirect(`${process.env.CLIENT_URL}/dashboard`)
   }
 )
-
 router.post('/logout', (req, res) => {
    res.clearCookie('token')
    res.json({ message: 'Logged out successfully' })

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { sendOTP, googleLogin } from "@/services/auth.service";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import { MailIcon } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
